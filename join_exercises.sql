@@ -16,6 +16,7 @@ ON e.emp_no = m.emp_no
 JOIN departments AS d
 ON m.dept_no = d.dept_no
 WHERE to_date LIKE '9999-01-01';
+-- OR i could have used: WHERE to_date > NOW()
 
 
 -- Find the name of all departments currently managed by women.
@@ -36,6 +37,7 @@ FROM dept_emp AS d
 JOIN titles AS t
 ON t.emp_no = d.emp_no
 WHERE t.to_date = '9999-01-01'
+AND d.to_date = '9999-01-01'
 AND dept_no = 'd009'
 GROUP BY t.title;
 
