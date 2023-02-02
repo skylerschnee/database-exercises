@@ -91,13 +91,15 @@ GROUP BY emp_no;
 
 SELECT COUNT(*)
 FROM employees
-WHERE emp_no IN
+WHERE emp_no NOT IN
 	(
 	SELECT emp_no
 	FROM dept_emp
-	WHERE to_date < NOW()
+	WHERE to_date > NOW()
 	GROUP BY emp_no
 	);
+	
+	-- A: 59900
 
 
 -- Find all the current department managers that are female. List their names in a comment in your code.
@@ -127,7 +129,7 @@ AND to_date > NOW();
 
 
 -- How many current salaries are within 1 standard deviation of the current highest salary? (Hint: you can use a built in function to calculate 
--- the standard deviation.) What percentage of all salaries is this?
+-- the standard deviation.) 
 
 -- Hint : You will likely use multiple subqueries in a variety of ways
 -- Hint : It's a good practice to write out all of the small queries that you can. Add a comment above the query showing the number of rows returned. 
@@ -156,15 +158,37 @@ WHERE salary >
 		(
 		SELECT STDDEV(salary)
 		FROM salaries
+		WHERE to_date > NOW()
 		)
-		AND to_date > NOW()	
-;
+AND to_date > NOW();
  	
 
+-- What percentage of all salaries is this?
 
 
 
-
+SELECT (
+		SELECT COUNT(salary)
+		FROM salaries 
+		WHERE salary > 
+			(
+			SELECT salary
+			FROM salaries
+			WHERE to_date > NOW()
+			ORDER BY salary DESC
+			LIMIT 1
+			) -
+		(
+		SELECT STDDEV(salary)
+		FROM salaries
+		WHERE to_date > NOW()
+		)
+	AND to_date > NOW())
+/
+		(SELECT COUNT(*) 
+		FROM salaries
+		WHERE to_date > NOW()
+		) * 100;
 
 
 
